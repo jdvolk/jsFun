@@ -1,3 +1,4 @@
+/* eslint-disable */
 const { kitties } = require('./datasets/kitties');
 const { clubs } = require('./datasets/clubs');
 const { mods } = require('./datasets/mods');
@@ -17,7 +18,6 @@ const { dinosaurs, humans, movies } = require('./datasets/dinosaurs');
 
 
 
-
 // SINGLE DATASETS
 // =================================================================
 
@@ -27,21 +27,31 @@ const kittyPrompts = {
 
     // Return an array of just the names of kitties who are orange e.g.
     // ['Tiger', 'Snickers']
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = kitties.filter(kitten => {
+      return kitten.color === "orange"
+    }).map(kitten => {
+      return kitten.name
+    });
     return result;
 
     // Annotation:
     // Write your annotation here as a comment
+    // input array of kitten obj
+    // filter through the array 
+    // call back is to look at kitten.color and return kitten.name 
+    // output is array of orange kitten names
   },
 
   sortByAge() {
     // Sort the kitties by their age
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = kitties.sort((a, b) => b.age - a.age)
     return result;
 
     // Annotation:
     // Write your annotation here as a comment
+    // input is an array of kitten obj
+    // output is array of kitten obj sorted by age
   },
 
   growUp() {
@@ -58,7 +68,14 @@ const kittyPrompts = {
     // },
     // ...etc]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    // map to duplicate the array
+    // add 2 to the age of each kitten
+    // return the new array
+
+    const result = kitties.map(kitten => {
+      kitten.age += 2
+      return kitten
+    }).sort((a, b) => b.age - a.age);
     return result;
   }
 };
@@ -89,12 +106,37 @@ const clubPrompts = {
     //   Pam: ['Drama', 'Art', 'Chess'],
     //   ...etc
     // }
-
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = clubs.reduce((acc, currentValue) => {
+      currentValue.members.forEach(member => {
+        if(!acc[member]) {
+          acc[member] = []
+        }
+        acc[member].push(currentValue.club)
+      })
+      return acc;
+    },{})
+    return result 
+/*
+    const result = clubs.reduce((acc, club) => {
+      club.members.forEach(member =>  {
+        if (!acc[member]) {
+          //  if the member is not a key set it up. then it iterates it back over 
+          acc[member] = []
+        }
+        acc[member].push(club.club)
+      })
+      return acc;
+    },{});
     return result;
+*/
 
     // Annotation:
     // Write your annotation here as a comment
+    // input is array of objects with nested arrays
+    // output is an object whos keys are the name of people and values are array of the clubs
+    // reduce the array to an object whos values are people
+    //keys are ann array of clubs
+
   }
 };
 
@@ -126,10 +168,20 @@ const modPrompts = {
     //   { mod: 4, studentsPerInstructor: 8 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = mods.map(mod => {
+      let resultObj = {}
+      let studentsPer = mod.students/mod.instructors
+      resultObj['mod'] = mod.mod
+      resultObj.studentsPerInstructor = studentsPer
+      return resultObj
+    })
     return result;
 
     // Annotation:
+    // input is array of obj
+    // map over the array the array 
+    // divide  students by instructors and set that to a new key of students per instructor 
+    // output is array of obj with students per instructor 
     // Write your annotation here as a comment
   }
 };
@@ -161,10 +213,18 @@ const cakePrompts = {
     //    ..etc
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cakes.map(cake => {
+      let resultObj = {};
+      resultObj['flavor'] = cake.cakeFlavor
+      resultObj['inStock'] = cake.inStock
+      return resultObj
+    });
     return result;
 
     // Annotation:
+    // input is array of cake objects
+    // map over the array and return a new obj with the mentioned keys
+    // output is an array of objects with flavor and amount instock 
     // Write your annotation here as a comment
   },
 
@@ -189,10 +249,13 @@ const cakePrompts = {
     // ..etc
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cakes.filter(cake => cake.inStock > 0);
     return result;
 
     // Annotation:
+    // input is array of cake objects 
+    // filter through array and return the obj that have a stock > 0
+    // output is array of only the cake objects that are in stock
     // Write your annotation here as a comment
   },
 
@@ -200,10 +263,17 @@ const cakePrompts = {
     // Return the total amount of cakes in stock e.g.
     // 59
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cakes.reduce((acc, currentValue) => {
+      acc += currentValue.inStock
+      return acc
+    }, 0)
     return result;
 
     // Annotation:
+    // input is array of cake obj
+    // reduce the array to one number (acc)
+    // acc + cake.inStock
+    // output is total number of cakes in stock
     // Write your annotation here as a comment
   },
 
@@ -211,11 +281,38 @@ const cakePrompts = {
     // Return an array of all unique toppings (no duplicates) needed to bake
     // every cake in the dataset e.g.
     // ['dutch process cocoa', 'toasted sugar', 'smoked sea salt', 'berries', ..etc]
+    // input array of cake obj
+    // reduce to an array 
+    // loop through the array of toppings and grab the unique ones then push that to the new array 
+    // output is array of unique toppings
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
-    return result;
+    const result = cakes.reduce((acc, currentValue) => {
+      currentValue.toppings.forEach(topping => {
+        if(!acc.includes(topping)) {
+          acc.push(topping)
+        } 
+      })
+      return acc
+    },[])
+    return result
+    // const result = cakes.reduce((acc, cake) => {
+    //   //we are reducing the cakes array and returning empty array
+    //   cake.toppings.forEach(topping => {
+    //     // for each topping in the toppings array
+    //     if(!acc.includes(topping)) {
+    //       // if the acc doesnt include the topping
+    //       acc.push(topping);
+    //       // push the topping in to the acc
+    //     }
+    //   })
+    //   return acc;
+    // }, []);
+    // return result;
 
     // Annotation:
+    // input array of objects
+    // output is an array of unique toppings
+
     // Write your annotation here as a comment
   },
 
@@ -230,10 +327,25 @@ const cakePrompts = {
     //    ...etc
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cakes.reduce((acc, currentValue) => {
+      currentValue.toppings.forEach(topping => {
+        !acc[topping] ? acc[topping] = 1 : acc[topping]++
+        // if(!acc[topping]) {
+        //   acc[topping] = 1
+        // } else {
+        //   acc[topping]++
+        // }
+      })
+      return acc 
+    }, {})
     return result;
 
     // Annotation:
+    // input is array of cake obj
+    // reduce array to one object
+    // instantiate the keys with if statement
+    
+    // output is obj with total amounts of each topping
     // Write your annotation here as a comment
   }
 };
@@ -265,10 +377,15 @@ const classPrompts = {
     //   { roomLetter: 'G', program: 'FE', capacity: 29 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = classrooms.filter(classRoom => {
+      return classRoom.program === 'FE'
+    })
     return result;
 
     // Annotation:
+    // input is array of classroom obj
+    // filter out the be classrooms 
+    // output is an array with just front end classes
     // Write your annotation here as a comment
   },
 
@@ -280,7 +397,7 @@ const classPrompts = {
     //   beCapacity: 96
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = "result here"
     return result;
 
     // Annotation:
@@ -316,12 +433,20 @@ const bookPrompts = {
     //   'The Curious Incident of the Dog in the Night - Time', 'The Bell Jar',
     //   'Catch-22', 'Treasure Island']
 
-
-    const result = 'REPLACE WITH YOUR RESULT HERE';
-    return result;
-
     // Annotation:
+    // input array of book obj
+    // filter out the books that are not horror or crime
+    // push these titles in to the result array
+    // return an array of all books that are not horror or
     // Write your annotation here as a comment
+
+    let bookTitles = []
+    const result = books.filter(book => {
+      if (book.genre !== "Horror" && book.genre !== "True Crime") {
+        bookTitles.push(book.title)
+      }
+    })
+    return bookTitles;
 
   },
   getNewBooks() {
@@ -412,9 +537,13 @@ const nationalParksPrompts = {
     //   parksVisited: ["Rocky Mountain", "Acadia", "Zion"]
     //}
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = nationalParks.reduce((acc, park) => {
+      !acc.parksToVisit ? acc.parksToVisit = [] : null
+      !acc.parksVisited ? acc.parksVisited = [] : null
+      park.visited ? acc.parksVisited.push(park.name) : acc.parksToVisit.push(park.name)
+      return acc
+    },{});
     return result;
-
     // Annotation:
     // Write your annotation here as a comment
   },
@@ -495,10 +624,11 @@ const breweryPrompts = {
     // ...etc.
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = breweries.map()
     return result;
 
     // Annotation:
+    // array of objs 
     // Write your annotation here as a comment
   },
 
@@ -555,7 +685,15 @@ const turingPrompts = {
     //  { name: 'Robbie', studentCount: 18 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = instructors.map(instructor => {
+      const teacher = {"name" : instructor.name,}
+      cohorts.forEach(cohort => {
+        if(instructor.module === cohort.module) {
+          teacher.studentCount = cohort.studentCount;
+        }
+      })
+      return teacher
+    });
     return result;
 
     // Annotation:
@@ -569,10 +707,13 @@ const turingPrompts = {
     // cohort1804: 10.5
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cohorts.reduce.apply(acc, cohort);
     return result;
 
     // Annotation:
+    // input is 2 array of objects 
+
+    // output is single object with the cohor as key and value is tudent per instructor
     // Write your annotation here as a comment
   },
 
@@ -590,11 +731,34 @@ const turingPrompts = {
     //     Christie: [1, 2, 3, 4],
     //     Will: [1, 2, 3, 4]
     //   }
-
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    
+    const result = instructors.reduce((acc, instructor) => {
+      resultArr = []
+      instructor.teaches.forEach(skill => {
+        cohorts.forEach(cohort => {
+          if (cohort.curriculum.includes(skill) && !resultArr.includes(cohort.module)) {
+            resultArr.push(cohort.module)
+          }
+        })
+      })
+      return acc[instructor.name] = resultArr.sort((a, b) => a - b)
+    }, {})
     return result;
 
+
+
+    //  turn cohorts array into (table) obj compare that to instructors array
+    // key is module value is curriciulum array
+    // try using set
+
     // Annotation:
+    // reduce to object with just teacher names as key
+    // values array of module they teach by comparing to the
+    // curriculum array from cohort dataset
+
+    // 
+    //output is obj names of instructors with arrays of 
+    //modules as values 
     // Write your annotation here as a comment
   },
 

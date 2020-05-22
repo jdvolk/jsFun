@@ -823,10 +823,23 @@ const turingPrompts = {
     //   recursion: [ 'Pam', 'Leta' ]
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = instructors.reduce((languages, teacher) => {
+      teacher.teaches.forEach(language => {
+        if(!languages[language]) languages[language] = []
+        languages[language].push(teacher.name)
+      })
+      return languages
+    }, {})
+      // iterate over instructors. if they can teach a skill push into respective skill array
     return result;
 
     // Annotation:
+    // input array of obj
+    // reduce the teaches arrays to the key
+    // if key !exist then create it 
+    // reduce teachers to an array of if they can teach language
+
+    // out put is obj with languages as key and array of teachers as value
     // Write your annotation here as a comment
   }
 };

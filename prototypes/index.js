@@ -749,11 +749,19 @@ const turingPrompts = {
     // cohort1804: 10.5
     // }
 
-    const result = ;
+    const result = cohorts.reduce((acc, currentValue) => {
+      let teachersPerMod = instructors.reduce((acc, teacher) => {
+        if(currentValue.module === teacher.module) {
+          acc.push(teacher.name)
+        }
+        return acc
+      },[])
+      acc[`cohort${currentValue.cohort}`] = currentValue.studentCount/teachersPerMod.length;
+      return acc
+    },{})
     return result;
 
     // Annotation:
-    // create result array
     // iterate through the instructors array get the amount of teachers in each module
     // iterate through the second array and 
     // output is single object with the cohor as key and value is tudent per instructor

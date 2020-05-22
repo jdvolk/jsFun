@@ -753,8 +753,9 @@ const turingPrompts = {
     return result;
 
     // Annotation:
-    // input is 2 array of objects 
-    
+    // create result array
+    // iterate through the instructors array get the amount of teachers in each module
+    // iterate through the second array and 
     // output is single object with the cohor as key and value is tudent per instructor
     // Write your annotation here as a comment
   },

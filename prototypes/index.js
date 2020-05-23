@@ -480,10 +480,16 @@ const weatherPrompts = {
     // return an array of all the average temperatures. Eg:
     // [ 40, 40, 44.5, 43.5, 57, 35, 65.5, 62, 14, 46.5 ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = weather.reduce((acc, city) => {
+       acc.push((city.temperature.high + city.temperature.low) / 2)
+      return acc
+    }, []);
     return result;
 
     // Annotation:
+    // input is array of obj
+    // reduce the array to an array that takes the high and low of each city and averages
+    // them together, then push them to the result array
     // Write your annotation here as a comment
   },
 
@@ -494,10 +500,15 @@ const weatherPrompts = {
     // 'New Orleans, Louisiana is sunny.',
     // 'Raleigh, North Carolina is mostly sunny.' ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = weather.filter(city => {
+      return city.type === 'sunny' || city.type === 'mostly sunny'
+    }).map(city => `${city.location} is ${city.type}.`);
     return result;
 
     // Annotation:
+    // return array with string of  city name and locations, only locations that are mostly sunny and sunny
+    // filter the data for sunny.
+    // then reduce or map to a string including the proper data 
     // Write your annotation here as a comment
   },
 
@@ -510,10 +521,13 @@ const weatherPrompts = {
     //   temperature: { high: 49, low: 38 }
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = weather.sort((a, b) => b.humidity - a.humidity)[0];
     return result;
 
     // Annotation:
+    // input is array of obj
+    // sort the array by humidity. then return the 0 index
+    // return the obj where the humidity is the highest
     // Write your annotation here as a comment
 
   }
@@ -556,9 +570,15 @@ const nationalParksPrompts = {
     // { Maine: 'Acadia' },
     // { Utah: 'Zion' },
     // { Florida: 'Everglades' } ]
+    // input array of obj
+    // map array to key keys and values
+    // out puy is object with state as key and val as park
 
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = nationalParks.map(park => {
+      return {[park.location] : park.name}
+    });
+    console.log(result);
     return result;
 
     // Annotation:
@@ -581,10 +601,19 @@ const nationalParksPrompts = {
     //   'backpacking',
     //   'rock climbing' ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = nationalParks.reduce((acc, park) => {
+      park.activities.forEach(activity => {
+        if(!acc.includes(activity)) acc.push(activity)
+      })
+      return acc
+    }, []);
     return result;
 
     // Annotation:
+    // iterate into the array of obj then iterate into the activity array
+    // push those into new result array 
+    // then use set and spread to make sure no duplicates
+
     // Write your annotation here as a comment
   }
 };
@@ -608,10 +637,13 @@ const breweryPrompts = {
     // Return the total beer count of all beers for every brewery e.g.
     // 40
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = breweries.reduce((acc, brewery) => acc + brewery.beers.length , 0);
     return result;
 
     // Annotation:
+    // input is array of obj
+    // reduce acc is 0 and then add current element.beers.length to the acc
+    // output is a number
     // Write your annotation here as a comment
   },
 
@@ -624,11 +656,15 @@ const breweryPrompts = {
     // ...etc.
     // ]
 
-    const result = breweries.map()
+    const result = breweries.map(brewery => {
+      return {name: brewery.name, beerCount: brewery.beers.length};
+    })
     return result;
 
     // Annotation:
-    // array of objs 
+    // array of objs
+    // output is the name of beer and beer count for that brew in obj
+
     // Write your annotation here as a comment
   },
 
@@ -637,10 +673,16 @@ const breweryPrompts = {
     // e.g.
     // { name: 'Barrel Aged Nature\'s Sweater', type: 'Barley Wine', abv: 10.9, ibu: 40 }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = breweries.reduce((acc, brewery) => {
+      brewery.beers.forEach(beer => acc.push(beer))
+      return acc;
+    }, []).sort((a, b) => b.abv - a.abv)[0]
     return result;
 
     // Annotation:
+    // iterate through the brewries get beers in array 
+    // sort the array the return the first one
+
     // Write your annotation here as a comment
   }
 };
@@ -707,12 +749,21 @@ const turingPrompts = {
     // cohort1804: 10.5
     // }
 
-    const result = cohorts.reduce.apply(acc, cohort);
+    const result = cohorts.reduce((acc, currentValue) => {
+      let teachersPerMod = instructors.reduce((acc, teacher) => {
+        if(currentValue.module === teacher.module) {
+          acc.push(teacher.name)
+        }
+        return acc
+      },[])
+      acc[`cohort${currentValue.cohort}`] = currentValue.studentCount/teachersPerMod.length;
+      return acc
+    },{})
     return result;
 
     // Annotation:
-    // input is 2 array of objects 
-
+    // iterate through the instructors array get the amount of teachers in each module
+    // iterate through the second array and 
     // output is single object with the cohor as key and value is tudent per instructor
     // Write your annotation here as a comment
   },
@@ -772,10 +823,23 @@ const turingPrompts = {
     //   recursion: [ 'Pam', 'Leta' ]
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = instructors.reduce((languages, teacher) => {
+      teacher.teaches.forEach(language => {
+        if(!languages[language]) languages[language] = []
+        languages[language].push(teacher.name)
+      })
+      return languages
+    }, {})
+      // iterate over instructors. if they can teach a skill push into respective skill array
     return result;
 
     // Annotation:
+    // input array of obj
+    // reduce the teaches arrays to the key
+    // if key !exist then create it 
+    // reduce teachers to an array of if they can teach language
+
+    // out put is obj with languages as key and array of teachers as value
     // Write your annotation here as a comment
   }
 };

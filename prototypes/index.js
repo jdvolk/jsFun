@@ -397,7 +397,9 @@ const classPrompts = {
     //   beCapacity: 96
     // }
 
-    const result = "result here"
+    const result = classrooms.reduce((totalCapacity, room) => {
+    })
+
     return result;
 
     // Annotation:
@@ -407,7 +409,7 @@ const classPrompts = {
   sortByCapacity() {
     // Return the array of classrooms sorted by their capacity (least capacity to greatest)
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = classrooms.sort((a,b) => a.capacity - b.capacity);
     return result;
 
     // Annotation:
@@ -457,7 +459,10 @@ const bookPrompts = {
     //  { title: 'Life of Pi', year: 2001 },
     //  { title: 'The Curious Incident of the Dog in the Night-Time', year: 2003 }]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = books.filter(book => book.published >= 1990)
+    .map((book) => {
+      return {title: book.title, year: book.published};
+    })
     return result;
 
     // Annotation:
@@ -871,10 +876,11 @@ const bossPrompts = {
     //   { bossName: 'Scar', sidekickLoyalty: 16 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = 
     return result;
 
     // Annotation:
+    // need to 
     // Write your annotation here as a comment
   }
 };
@@ -1122,11 +1128,25 @@ const dinosaurPrompts = {
       { name: 'Bryce Dallas Howard', ages: [ 34, 37 ] } ]
     */
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = movies.reduce((actorAges, movie) =>{
+      movie.cast.forEach((member) => {
+        let finder = actorAges.find(obj => obj.name === member)
+        if(!finder) {
+          actorAges.push({
+            "name" : member,
+            "ages" : []
+          })
+        }
+        actorAges.forEach(actor => {
+          if(actor.name === member) {
+            let ageWhenMovie = movie.yearReleased - humans[actor.name].yearBorn
+            actor.ages.push(ageWhenMovie)
+          }
+        })
+      })
+      return actorAges
+    }, []);
     return result;
-
-    // Annotation:
-    // Write your annotation here as a comment
   }
 };
 
